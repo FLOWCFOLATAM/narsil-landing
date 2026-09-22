@@ -15,11 +15,20 @@
 
 <!-- ============ ACCESO ============ -->
 <section class="gate" id="gate" hidden>
+  <div class="gate__bg">
+    <video id="gate-video" muted loop playsinline autoplay preload="metadata" poster="../assets/video/demo-seguridad.jpg" src="../assets/video/demo-seguridad.mp4"></video>
+  </div>
+  <div class="scan"></div>
   <div class="gate__card">
     <p class="wordmark"><span>NARSIL</span><small>PROTOCOL</small></p>
-    <h1 class="gate__title">Centro de mando</h1>
-    <p class="gate__lede">Acceso restringido. La sesión se valida con Amazon Cognito; no se guarda ninguna contraseña en este sitio.</p>
-    <button class="btn btn--primary" id="btn-login" type="button">Entrar</button>
+    <h1 class="gate__title">Centro de <em>mando</em></h1>
+    <p class="gate__lede">Acceso restringido. La sesión se valida con Amazon Cognito; ninguna contraseña pasa por este sitio.</p>
+    <ul class="gate__checks" id="gate-checks">
+      <li data-check="enlace"><span>ENLACE · sitio</span><i>—</i><b class="badge">…</b></li>
+      <li data-check="cognito"><span>IDENTIDAD · Cognito us-east-1</span><i>—</i><b class="badge">…</b></li>
+      <li data-check="motor"><span>MOTOR · escenarios</span><i>—</i><b class="badge">…</b></li>
+    </ul>
+    <button class="btn btn--primary btn--wide" id="btn-login" type="button">Entrar</button>
     <p class="gate__err" id="gate-err" hidden></p>
     <p class="gate__foot mono" id="gate-foot"></p>
   </div>
@@ -59,14 +68,17 @@
       <div class="cols">
         <div class="col col--media">
           <figure class="media">
-            <div class="media__head mono"><span>CAM-07 · QUINTA AVENIDA</span><span id="seg-t">t = 0,0 s</span></div>
-            <video id="seg-video" muted loop playsinline autoplay preload="metadata" poster="../assets/video/demo-seguridad.jpg" src="../assets/video/demo-seguridad.mp4"></video>
+            <div class="media__head mono"><span>CAM-07 · <b>QUINTA AVENIDA</b></span><span id="seg-t">t = 0,0 s</span></div>
+            <div class="media__wrap">
+              <video id="seg-video" muted loop playsinline autoplay preload="auto" poster="../assets/video/demo-seguridad.jpg" src="../assets/video/demo-seguridad.mp4"></video>
+              <div class="frame"><i></i></div><div class="scan"></div>
+            </div>
             <div class="timeline" id="seg-timeline" aria-hidden="true"><div class="timeline__bar" id="seg-bar"></div></div>
             <figcaption class="media__cap">Overlay generado por el motor sobre la corrida real. Las alertas de la derecha se disparan en el instante en que ocurrieron.</figcaption>
           </figure>
           <div class="kpis">
-            <div class="kpi"><p class="label mono">Personas identificadas</p><p class="kpi__v" id="seg-personas">—</p></div>
-            <div class="kpi"><p class="label mono">Alertas en la corrida</p><p class="kpi__v" id="seg-eventos">—</p></div>
+            <div class="kpi"><p class="label mono">Personas identificadas</p><p class="kpi__v" id="seg-personas" data-tick>—</p></div>
+            <div class="kpi"><p class="label mono">Alertas en la corrida</p><p class="kpi__v" id="seg-eventos" data-tick>—</p></div>
             <div class="kpi"><p class="label mono">Alertas abiertas</p><p class="kpi__v kpi__v--alerta" id="seg-abiertas">0</p></div>
             <div class="kpi"><p class="label mono">Fotogramas / s</p><p class="kpi__v">15</p></div>
           </div>
@@ -112,8 +124,11 @@
       <div class="cols">
         <div class="col col--media">
           <figure class="media">
-            <div class="media__head mono"><span>CAM-04 · PASILLO NIVEL 1 · ROSEN</span><span id="ret-t">t = 0,0 s</span></div>
-            <video id="ret-video" muted loop playsinline preload="auto" poster="../assets/video/demo-rosen.jpg" src="../assets/video/demo-rosen.mp4"></video>
+            <div class="media__head mono"><span>CAM-04 · <b>PASILLO NIVEL 1 · ROSEN</b></span><span id="ret-t">t = 0,0 s</span></div>
+            <div class="media__wrap">
+              <video id="ret-video" muted loop playsinline preload="auto" poster="../assets/video/demo-rosen.jpg" src="../assets/video/demo-rosen.mp4"></video>
+              <div class="frame"><i></i></div><div class="scan"></div>
+            </div>
             <div class="timeline" id="ret-timeline" aria-hidden="true"><div class="timeline__bar" id="ret-bar"></div></div>
             <figcaption class="media__cap">Grabación propia. Se mide quién pasa y quién se detiene frente al local; no se publica «entró» porque esta cámara no lo sostiene.</figcaption>
           </figure>
@@ -123,6 +138,10 @@
           </div>
         </div>
         <div class="col col--side">
+          <div class="cta-panel">
+            <p><b>Plataforma comercial</b>Tráfico, atención y conversión, con exportación a Excel.</p>
+            <button class="btn btn--primary btn--sm" id="btn-comercial" type="button">Ingresar →</button>
+          </div>
           <div class="panel">
             <p class="label mono">Embudo de la calle</p>
             <div class="funnel">
@@ -149,13 +168,60 @@
       </div>
     </section>
 
+    <!-- ---------- PLATAFORMA COMERCIAL ---------- -->
+    <section class="view" data-view="comercial">
+      <div class="com-head">
+        <div>
+          <p class="mono label">Rosen · Pasillo nivel 1 · CAM-04</p>
+          <h2 class="topbar__title">Plataforma comercial</h2>
+        </div>
+        <div class="com-acciones">
+          <button class="btn btn--ghost btn--sm" id="com-volver" type="button">← Volver a Retail</button>
+          <button class="btn btn--primary btn--sm" id="com-xlsx" type="button">Descargar Excel</button>
+        </div>
+      </div>
+      <div class="kpis">
+        <div class="kpi kpi--acento"><p class="label mono">Tráfico por hora <em class="tag">PROYECCIÓN</em></p><p class="kpi__v" id="com-hora">—</p><p class="kpi__n">a partir de 18 s reales medidos</p></div>
+        <div class="kpi"><p class="label mono">Pasadas medidas</p><p class="kpi__v" id="com-trafico" data-tick>—</p><p class="kpi__n">personas que cruzaron el pasillo</p></div>
+        <div class="kpi"><p class="label mono">Tasa de atención</p><p class="kpi__v" id="com-atencion">—</p><p class="kpi__n" id="com-detenidos">—</p></div>
+        <div class="kpi"><p class="label mono">Compras estimadas <em class="tag">DEMO DATA</em></p><p class="kpi__v" id="com-compras">—</p><p class="kpi__n">tasa de compra del POS: 63,5 %</p></div>
+      </div>
+      <div class="cols" style="margin-top:16px">
+        <div class="col">
+          <div class="panel">
+            <div class="panel__head"><p class="label mono">Tráfico por día <em class="tag">PROYECCIÓN</em></p><p class="mono muted" style="font-size:.6rem">semana tipo · 12 h de apertura</p></div>
+            <canvas class="spark" id="com-semana" width="640" height="180" style="height:180px" aria-label="Tráfico por día"></canvas>
+          </div>
+          <div class="panel">
+            <div class="panel__head"><p class="label mono">Intensidad por hora <em class="tag">PROYECCIÓN</em></p></div>
+            <div class="heat" id="com-horas"></div>
+            <p class="heat-legend mono">10:00 → 22:00 · más azul, más tráfico</p>
+          </div>
+        </div>
+        <div class="col">
+          <div class="panel">
+            <p class="label mono">Dirección del flujo</p>
+            <div class="bars" id="com-dir"></div>
+          </div>
+          <div class="panel">
+            <div class="panel__head"><p class="label mono">Eventos de atención</p><p class="mono muted" style="font-size:.6rem" id="com-n">—</p></div>
+            <table class="table"><thead><tr><th>#</th><th>Instante</th><th>Zona</th><th>Personas</th><th>Detalle</th></tr></thead><tbody id="com-tabla"></tbody></table>
+            <p class="com-estado mono" id="com-estado"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ---------- PRODUCCION ---------- -->
     <section class="view" data-view="produccion">
       <div class="cols">
         <div class="col col--media">
           <figure class="media">
-            <div class="media__head mono"><span>CAM-12 · LÍNEA 3 · EMPAQUE</span><span id="pro-t">t = 0,0 s</span></div>
-            <video id="pro-video" muted loop playsinline preload="auto" poster="../assets/video/demo-produccion.jpg" src="../assets/video/demo-produccion.mp4"></video>
+            <div class="media__head mono"><span>CAM-12 · <b>LÍNEA 3 · EMPAQUE</b></span><span id="pro-t">t = 0,0 s</span></div>
+            <div class="media__wrap">
+              <video id="pro-video" muted loop playsinline preload="auto" poster="../assets/video/demo-produccion.jpg" src="../assets/video/demo-produccion.mp4"></video>
+              <div class="frame"><i></i></div><div class="scan"></div>
+            </div>
             <div class="timeline" aria-hidden="true"><div class="timeline__bar" id="pro-bar"></div></div>
             <figcaption class="media__cap">Cada unidad cruza la línea de conteo una sola vez. Cero alertas a propósito: una faja no tiene anomalías.</figcaption>
           </figure>
@@ -192,8 +258,7 @@
             <div class="panel">
               <div class="panel__head"><p class="label mono">Pre-vuelo</p><p class="mono muted" id="pf-dron-nombre"></p></div>
               <div class="form">
-                <label class="field"><span class="mono">Aeronave</span>
-                  <select id="pf-dron"></select></label>
+                <label class="field"><span class="mono">Aeronave</span><select id="pf-dron"></select></label>
                 <label class="field"><span class="mono">Modo de misión</span>
                   <select id="pf-modo">
                     <option value="perimetro">Perímetro</option>
@@ -201,18 +266,12 @@
                     <option value="patrulla">Patrulla programada</option>
                     <option value="respuesta">Respuesta a alerta</option>
                   </select></label>
-                <label class="field field--range"><span class="mono">Distancia de misión <b id="pf-dist-v">3,0 km</b></span>
-                  <input type="range" id="pf-dist" min="1" max="60" step="0.5" value="3"></label>
-                <label class="field field--range"><span class="mono">Altitud <b id="pf-alt-v">60 m</b></span>
-                  <input type="range" id="pf-alt" min="20" max="120" step="5" value="60"></label>
-                <label class="field field--range"><span class="mono">Velocidad crucero <b id="pf-vel-v">— km/h</b></span>
-                  <input type="range" id="pf-vel" min="20" max="90" step="1" value="40"></label>
-                <label class="field field--range"><span class="mono">Carga útil <b id="pf-carga-v">0,3 kg</b></span>
-                  <input type="range" id="pf-carga" min="0.1" max="1.2" step="0.05" value="0.3"></label>
-                <label class="field field--toggle"><span class="mono">LiDAR (evitación y altura sobre terreno)</span>
-                  <input type="checkbox" id="pf-lidar" checked><i></i></label>
-                <label class="field field--range"><span class="mono">Waypoints <b id="pf-wp-v">8</b></span>
-                  <input type="range" id="pf-wp" min="2" max="40" step="1" value="8"></label>
+                <label class="field field--range"><span class="mono">Distancia de misión <b id="pf-dist-v">3,0 km</b></span><input type="range" id="pf-dist" min="1" max="60" step="0.5" value="3"></label>
+                <label class="field field--range"><span class="mono">Altitud <b id="pf-alt-v">60 m</b></span><input type="range" id="pf-alt" min="20" max="120" step="5" value="60"></label>
+                <label class="field field--range"><span class="mono">Velocidad crucero <b id="pf-vel-v">— km/h</b></span><input type="range" id="pf-vel" min="20" max="90" step="1" value="40"></label>
+                <label class="field field--range"><span class="mono">Carga útil <b id="pf-carga-v">0,3 kg</b></span><input type="range" id="pf-carga" min="0.1" max="1.2" step="0.05" value="0.3"></label>
+                <label class="field field--toggle"><span class="mono">LiDAR (evitación y altura sobre terreno)</span><input type="checkbox" id="pf-lidar" checked><i></i></label>
+                <label class="field field--range"><span class="mono">Waypoints <b id="pf-wp-v">8</b></span><input type="range" id="pf-wp" min="2" max="40" step="1" value="8"></label>
               </div>
             </div>
             <div class="panel">
@@ -240,21 +299,42 @@
               </div>
               <p class="plan__veredicto mono" id="pl-veredicto">—</p>
               <p class="plan__nota" id="pl-nota"></p>
-              <button class="btn btn--primary" id="pf-autorizar" type="button" disabled>Autorizar y simular vuelo</button>
+              <button class="btn btn--primary btn--wide" id="pf-autorizar" type="button" disabled>Autorizar y simular vuelo</button>
             </div>
             <div class="panel mission" id="mision" hidden>
-              <div class="panel__head"><p class="label mono">Misión en curso</p><p class="mono" id="mi-fase">—</p></div>
-              <div class="mission__feed">
-                <video id="mi-video" muted loop playsinline preload="none" data-src="https://videos.pexels.com/video-files/19909718/19909718-hd_1920_1080_30fps.mp4"></video>
+              <div class="panel__head"><p class="label mono">Misión en curso <em class="tag">SIMULACIÓN</em></p><p class="mono" id="mi-fase">—</p></div>
+              <div class="mission__feed" id="mi-feed">
+                <video id="mi-vA" muted loop playsinline preload="none"></video>
+                <video id="mi-vB" muted loop playsinline preload="none"></video>
+                <div class="frame"><i></i></div>
+                <div class="hud">
+                  <div class="hud__top"><span>POV · <b id="mi-cam">CÁMARA FRONTAL</b></span><span>HDG <b id="mi-hdg">000</b>° · SAT <b id="mi-sat">0</b> · LINK <b id="mi-link">—</b></span></div>
+                  <div class="hud__horizon" id="mi-horizonte"></div>
+                  <div class="hud__cross"><i></i></div>
+                  <div class="radar"></div>
+                </div>
                 <div class="mission__hud mono">
-                  <span>ALT <b id="mi-alt">0</b> m</span><span>VEL <b id="mi-vel">0</b> km/h</span><span>BAT <b id="mi-bat">100</b> %</span><span>DIST <b id="mi-dist">0,0</b> km</span>
+                  <span>ALT <b id="mi-alt">0</b> m</span><span>VEL <b id="mi-vel">0</b> km/h</span><span>BAT <b id="mi-bat">100</b> %</span><span>DIST <b id="mi-dist">0,0</b> km</span><span>T+ <b id="mi-reloj">00:00</b></span>
                 </div>
               </div>
+              <div class="ticker"><div id="mi-ticker"></div></div>
               <div class="timeline timeline--mission"><div class="timeline__bar" id="mi-bar"></div></div>
               <ol class="phases mono" id="mi-fases">
                 <li data-f="0">Despegue</li><li data-f="1">Transición</li><li data-f="2">Crucero</li><li data-f="3">Retorno</li><li data-f="4">Aterrizaje</li>
               </ol>
-              <p class="mission__log mono" id="mi-log"></p>
+              <div class="mission__grid">
+                <div class="console" id="mi-log"></div>
+                <div class="route">
+                  <svg id="mi-ruta" viewBox="0 0 200 130" aria-label="Ruta planificada">
+                    <g class="grid" id="mi-ruta-grid"></g>
+                    <path class="traza" id="mi-ruta-path" d=""></path>
+                    <path class="hecho" id="mi-ruta-hecho" d=""></path>
+                    <g id="mi-ruta-wps"></g>
+                    <circle class="dron" id="mi-ruta-dot" r="2.6" cx="0" cy="0"></circle>
+                  </svg>
+                  <p>RUTA · <span id="mi-ruta-n">—</span> WP</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
