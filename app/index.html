@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Narsil Protocol — Centro de mando</title>
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<!-- ============ ACCESO ============ -->
+<section class="gate" id="gate" hidden>
+  <div class="gate__card">
+    <p class="wordmark"><span>NARSIL</span><small>PROTOCOL</small></p>
+    <h1 class="gate__title">Centro de mando</h1>
+    <p class="gate__lede">Acceso restringido. La sesión se valida con Amazon Cognito; no se guarda ninguna contraseña en este sitio.</p>
+    <button class="btn btn--primary" id="btn-login" type="button">Entrar</button>
+    <p class="gate__err" id="gate-err" hidden></p>
+    <p class="gate__foot mono" id="gate-foot"></p>
+  </div>
+</section>
+
+<!-- ============ APLICACION ============ -->
+<div class="app" id="app" hidden>
+  <aside class="rail">
+    <p class="wordmark wordmark--sm"><span>NARSIL</span><small>PROTOCOL</small></p>
+    <nav class="tabs" aria-label="Módulos">
+      <button class="tab is-active" data-tab="seguridad" type="button"><i class="mono">/01</i><b>Seguridad</b><s>Eventos y evidencia</s></button>
+      <button class="tab" data-tab="retail" type="button"><i class="mono">/02</i><b>Retail</b><s>Tránsito y atención</s></button>
+      <button class="tab" data-tab="produccion" type="button"><i class="mono">/03</i><b>Producción</b><s>Conteo y ritmo</s></button>
+      <button class="tab" data-tab="flota" type="button"><i class="mono">/04</i><b>Flota y pre-vuelo</b><s>Drones · misiones</s></button>
+    </nav>
+    <div class="rail__foot">
+      <p class="mono label">Sesión</p>
+      <p class="rail__user" id="rail-user">—</p>
+      <button class="btn btn--ghost" id="btn-logout" type="button">Cerrar sesión</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <p class="mono label" id="top-label">Seguridad</p>
+        <h1 class="topbar__title" id="top-title">Eventos y evidencia</h1>
+      </div>
+      <div class="topbar__status mono">
+        <span><i class="dot dot--ok"></i> MOTOR EN LÍNEA</span>
+        <span id="top-clock">—</span>
+      </div>
+    </header>
+
+    <!-- ---------- SEGURIDAD ---------- -->
+    <section class="view is-active" data-view="seguridad">
+      <div class="cols">
+        <div class="col col--media">
+          <figure class="media">
+            <div class="media__head mono"><span>CAM-07 · QUINTA AVENIDA</span><span id="seg-t">t = 0,0 s</span></div>
+            <video id="seg-video" muted loop playsinline autoplay preload="metadata" poster="../assets/video/demo-seguridad.jpg" src="../assets/video/demo-seguridad.mp4"></video>
+            <div class="timeline" id="seg-timeline" aria-hidden="true"><div class="timeline__bar" id="seg-bar"></div></div>
+            <figcaption class="media__cap">Overlay generado por el motor sobre la corrida real. Las alertas de la derecha se disparan en el instante en que ocurrieron.</figcaption>
+          </figure>
+          <div class="kpis">
+            <div class="kpi"><p class="label mono">Personas identificadas</p><p class="kpi__v" id="seg-personas">—</p></div>
+            <div class="kpi"><p class="label mono">Alertas en la corrida</p><p class="kpi__v" id="seg-eventos">—</p></div>
+            <div class="kpi"><p class="label mono">Alertas abiertas</p><p class="kpi__v kpi__v--alerta" id="seg-abiertas">0</p></div>
+            <div class="kpi"><p class="label mono">Fotogramas / s</p><p class="kpi__v">15</p></div>
+          </div>
+          <div class="panel">
+            <p class="label mono">Reglas activas</p>
+            <ul class="chips" id="seg-reglas"></ul>
+          </div>
+        </div>
+        <div class="col col--side">
+          <div class="panel panel--fill">
+            <div class="panel__head">
+              <p class="label mono">Alertas</p>
+              <div class="filters" id="seg-filtros">
+                <button class="chip is-active" data-sev="todas" type="button">Todas</button>
+                <button class="chip" data-sev="high" type="button">Altas</button>
+                <button class="chip" data-sev="medium" type="button">Medias</button>
+              </div>
+            </div>
+            <ol class="alerts" id="seg-alertas"></ol>
+            <p class="empty" id="seg-vacio">Esperando eventos…</p>
+          </div>
+          <div class="panel detail" id="seg-detalle" hidden>
+            <div class="panel__head"><p class="label mono">Evidencia</p><button class="x" id="seg-cerrar" type="button" aria-label="Cerrar">×</button></div>
+            <p class="detail__sev mono" id="det-sev"></p>
+            <p class="detail__texto" id="det-texto"></p>
+            <dl class="detail__meta mono">
+              <div><dt>Zona</dt><dd id="det-zona"></dd></div>
+              <div><dt>Instante</dt><dd id="det-t"></dd></div>
+              <div><dt>Duración</dt><dd id="det-dur"></dd></div>
+              <div><dt>Entidades</dt><dd id="det-ent"></dd></div>
+            </dl>
+            <div class="detail__acciones">
+              <button class="btn btn--primary btn--sm" id="det-ver" type="button">Ver en el video</button>
+              <button class="btn btn--ghost btn--sm" id="det-atender" type="button">Marcar atendida</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- RETAIL ---------- -->
+    <section class="view" data-view="retail">
+      <div class="cols">
+        <div class="col col--media">
+          <figure class="media">
+            <div class="media__head mono"><span>CAM-04 · PASILLO NIVEL 1 · ROSEN</span><span id="ret-t">t = 0,0 s</span></div>
+            <video id="ret-video" muted loop playsinline preload="auto" poster="../assets/video/demo-rosen.jpg" src="../assets/video/demo-rosen.mp4"></video>
+            <div class="timeline" id="ret-timeline" aria-hidden="true"><div class="timeline__bar" id="ret-bar"></div></div>
+            <figcaption class="media__cap">Grabación propia. Se mide quién pasa y quién se detiene frente al local; no se publica «entró» porque esta cámara no lo sostiene.</figcaption>
+          </figure>
+          <div class="panel">
+            <p class="label mono">Ocupación del pasillo</p>
+            <canvas class="spark" id="ret-spark" width="640" height="120" aria-label="Serie de ocupación"></canvas>
+          </div>
+        </div>
+        <div class="col col--side">
+          <div class="panel">
+            <p class="label mono">Embudo de la calle</p>
+            <div class="funnel">
+              <div class="step"><span class="step__k">Pasaron</span><span class="step__v" id="ret-pasaron">0</span><i class="step__bar" style="--w:100%"></i></div>
+              <div class="step__arrow mono" id="ret-tasa">— se detienen a mirar</div>
+              <div class="step step--ok"><span class="step__k">Se detuvieron</span><span class="step__v" id="ret-detenidos">0</span><i class="step__bar" id="ret-detbar"></i></div>
+              <div class="step__arrow mono">× tasa de compra <em class="tag">DEMO DATA</em></div>
+              <div class="step step--dim"><span class="step__k">Compras</span><span class="step__v" id="ret-compras">0</span><i class="step__bar" id="ret-combar"></i></div>
+            </div>
+          </div>
+          <div class="kpis kpis--2">
+            <div class="kpi kpi--acento"><p class="label mono">Tasa de atención</p><p class="kpi__v" id="ret-atencion">—</p></div>
+            <div class="kpi"><p class="label mono">En cuadro ahora</p><p class="kpi__v" id="ret-ahora">0</p></div>
+          </div>
+          <div class="panel">
+            <p class="label mono">Dirección del flujo</p>
+            <div class="bars" id="ret-dir"></div>
+          </div>
+          <div class="panel panel--fill">
+            <p class="label mono">Atención al escaparate</p>
+            <ol class="alerts alerts--ok" id="ret-eventos"></ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- PRODUCCION ---------- -->
+    <section class="view" data-view="produccion">
+      <div class="cols">
+        <div class="col col--media">
+          <figure class="media">
+            <div class="media__head mono"><span>CAM-12 · LÍNEA 3 · EMPAQUE</span><span id="pro-t">t = 0,0 s</span></div>
+            <video id="pro-video" muted loop playsinline preload="auto" poster="../assets/video/demo-produccion.jpg" src="../assets/video/demo-produccion.mp4"></video>
+            <div class="timeline" aria-hidden="true"><div class="timeline__bar" id="pro-bar"></div></div>
+            <figcaption class="media__cap">Cada unidad cruza la línea de conteo una sola vez. Cero alertas a propósito: una faja no tiene anomalías.</figcaption>
+          </figure>
+          <div class="panel">
+            <p class="label mono">Unidades por segundo</p>
+            <canvas class="spark" id="pro-spark" width="640" height="120" aria-label="Ritmo de la línea"></canvas>
+          </div>
+        </div>
+        <div class="col col--side">
+          <div class="kpi kpi--hero"><p class="label mono">Unidades contadas</p><p class="kpi__v" id="pro-unidades">0</p><p class="kpi__n">cada unidad cruzando la línea, una sola vez</p></div>
+          <div class="kpis kpis--2">
+            <div class="kpi kpi--acento"><p class="label mono">Ritmo</p><p class="kpi__v" id="pro-ritmo">—</p><p class="kpi__n">unidades / minuto</p></div>
+            <div class="kpi"><p class="label mono">Turno de 8 h <em class="tag">PROYECCIÓN</em></p><p class="kpi__v" id="pro-turno">—</p><p class="kpi__n">al ritmo medido</p></div>
+          </div>
+          <div class="panel">
+            <p class="label mono">Estado de la línea</p>
+            <ul class="rows mono">
+              <li><span>Detector</span><b>color · ROI de faja</b></li>
+              <li><span>Coste por fotograma</span><b>1,7 ms</b></li>
+              <li><span>Alertas</span><b>0 · a propósito</b></li>
+              <li><span>Integración</span><b>ERP <em class="tag">DEMO DATA</em></b></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- FLOTA ---------- -->
+    <section class="view" data-view="flota">
+      <div class="fleet">
+        <div class="fleet__cards" id="fleet-cards"></div>
+        <div class="cols cols--fleet">
+          <div class="col">
+            <div class="panel">
+              <div class="panel__head"><p class="label mono">Pre-vuelo</p><p class="mono muted" id="pf-dron-nombre"></p></div>
+              <div class="form">
+                <label class="field"><span class="mono">Aeronave</span>
+                  <select id="pf-dron"></select></label>
+                <label class="field"><span class="mono">Modo de misión</span>
+                  <select id="pf-modo">
+                    <option value="perimetro">Perímetro</option>
+                    <option value="corredor">Corredor / carretera</option>
+                    <option value="patrulla">Patrulla programada</option>
+                    <option value="respuesta">Respuesta a alerta</option>
+                  </select></label>
+                <label class="field field--range"><span class="mono">Distancia de misión <b id="pf-dist-v">3,0 km</b></span>
+                  <input type="range" id="pf-dist" min="1" max="60" step="0.5" value="3"></label>
+                <label class="field field--range"><span class="mono">Altitud <b id="pf-alt-v">60 m</b></span>
+                  <input type="range" id="pf-alt" min="20" max="120" step="5" value="60"></label>
+                <label class="field field--range"><span class="mono">Velocidad crucero <b id="pf-vel-v">— km/h</b></span>
+                  <input type="range" id="pf-vel" min="20" max="90" step="1" value="40"></label>
+                <label class="field field--range"><span class="mono">Carga útil <b id="pf-carga-v">0,3 kg</b></span>
+                  <input type="range" id="pf-carga" min="0.1" max="1.2" step="0.05" value="0.3"></label>
+                <label class="field field--toggle"><span class="mono">LiDAR (evitación y altura sobre terreno)</span>
+                  <input type="checkbox" id="pf-lidar" checked><i></i></label>
+                <label class="field field--range"><span class="mono">Waypoints <b id="pf-wp-v">8</b></span>
+                  <input type="range" id="pf-wp" min="2" max="40" step="1" value="8"></label>
+              </div>
+            </div>
+            <div class="panel">
+              <p class="label mono">Lista de comprobación</p>
+              <ul class="checklist" id="pf-check">
+                <li><label><input type="checkbox" data-chk> <span>Batería ≥ 95 % y celdas balanceadas</span></label></li>
+                <li><label><input type="checkbox" data-chk> <span>Fijación GPS (≥ 12 satélites)</span></label></li>
+                <li><label><input type="checkbox" data-chk> <span>LiDAR calibrado sobre superficie conocida</span></label></li>
+                <li><label><input type="checkbox" data-chk> <span>Enlace de telemetría y video (MAVLink)</span></label></li>
+                <li><label><input type="checkbox" data-chk> <span>Geocerca cargada y zona sin obstáculos</span></label></li>
+                <li><label><input type="checkbox" data-chk> <span>Permiso DGAC y visual del piloto confirmados</span></label></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col">
+            <div class="panel plan" id="pf-plan">
+              <p class="label mono">Plan de vuelo calculado</p>
+              <div class="plan__grid">
+                <div><span class="mono">Duración estimada</span><b id="pl-dur">—</b></div>
+                <div><span class="mono">Autonomía de la aeronave</span><b id="pl-auto">—</b></div>
+                <div><span class="mono">Reserva al aterrizar</span><b id="pl-res">—</b></div>
+                <div><span class="mono">Consumo estimado</span><b id="pl-bat">—</b></div>
+                <div><span class="mono">Cobertura</span><b id="pl-cob">—</b></div>
+                <div><span class="mono">Alcance LiDAR</span><b id="pl-lidar">—</b></div>
+              </div>
+              <p class="plan__veredicto mono" id="pl-veredicto">—</p>
+              <p class="plan__nota" id="pl-nota"></p>
+              <button class="btn btn--primary" id="pf-autorizar" type="button" disabled>Autorizar y simular vuelo</button>
+            </div>
+            <div class="panel mission" id="mision" hidden>
+              <div class="panel__head"><p class="label mono">Misión en curso</p><p class="mono" id="mi-fase">—</p></div>
+              <div class="mission__feed">
+                <video id="mi-video" muted loop playsinline preload="none" data-src="https://videos.pexels.com/video-files/19909718/19909718-hd_1920_1080_30fps.mp4"></video>
+                <div class="mission__hud mono">
+                  <span>ALT <b id="mi-alt">0</b> m</span><span>VEL <b id="mi-vel">0</b> km/h</span><span>BAT <b id="mi-bat">100</b> %</span><span>DIST <b id="mi-dist">0,0</b> km</span>
+                </div>
+              </div>
+              <div class="timeline timeline--mission"><div class="timeline__bar" id="mi-bar"></div></div>
+              <ol class="phases mono" id="mi-fases">
+                <li data-f="0">Despegue</li><li data-f="1">Transición</li><li data-f="2">Crucero</li><li data-f="3">Retorno</li><li data-f="4">Aterrizaje</li>
+              </ol>
+              <p class="mission__log mono" id="mi-log"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

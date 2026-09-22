@@ -7,7 +7,7 @@ window.NARSIL_I18N = (function () {
     "Narsil Protocol — Inteligencia visual soberana": "Narsil Protocol — Sovereign Visual Intelligence",
     "Ir al contenido": "Skip to content",
     "Plataforma": "Platform", "Industrias": "Industries", "Cómo funciona": "How it works", "Visión": "Vision", "Contacto": "Contact",
-    "Solicitar demo": "Request a demo", "Ver la plataforma": "See the platform", "Escríbenos": "Write to us",
+    "Solicitar demo": "Request a demo", "Acceder": "Sign in", "Ver la plataforma": "See the platform", "Escríbenos": "Write to us",
     /* Demos desplegables */
     "Entender el tránsito y la atención al local.": "Understand footfall and attention to the store.",
     "Operaciones e infraestructura": "Operations and infrastructure",
