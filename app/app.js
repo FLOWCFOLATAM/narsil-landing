@@ -1,9 +1,12 @@
 /* Narsil Protocol — Centro de mando (maqueta interactiva para inversores)
  *
  * Que es real y que es maqueta, para que nadie lo confunda:
- *   - El acceso es real: Amazon Cognito, flujo de codigo con PKCE. Ninguna
- *     contrasena pasa por este sitio. Las comprobaciones de la pantalla de
- *     acceso tambien son reales (latencia del sitio, descubrimiento OpenID de
+ *   - El acceso es real: Amazon Cognito por su API directa, desde esta misma
+ *     pantalla (USER_PASSWORD_AUTH sobre HTTPS). La contrasena viaja cifrada
+ *     a Amazon; este sitio es estatico y no la guarda ni la ve. El primer
+ *     ingreso con clave temporal y la recuperacion por codigo al correo se
+ *     resuelven aqui mismo. Las comprobaciones de la pantalla de acceso
+ *     tambien son reales (latencia del sitio, descubrimiento OpenID de
  *     Cognito, carga de escenarios).
  *   - Los videos de Seguridad, Retail y Produccion son corridas reales del
  *     motor con su overlay ya pintado, y sus alertas, embudos y conteos salen
@@ -18,20 +21,8 @@
 
   /* ============ CONFIGURACION DE ACCESO ============ */
   // Identificadores publicos de un cliente publico: no son secretos.
-  const AUTH = {
-    region: "us-east-1",
-    poolId: "us-east-1_RwigCjM55",
-    domain: "narsil-protocol-c8c094.auth.us-east-1.amazoncognito.com",
-    clientId: "1h13ehjo696shqevvuo3hf0ff3",
-    scope: "openid email profile",
-  };
-  // Cognito exige que redirect_uri coincida EXACTAMENTE con la registrada,
-  // barra final incluida. Se calcula, no se escribe a mano.
-  const REDIRECT = (() => {
-    let p = location.pathname;
-    if (!p.endsWith("/")) p = p.replace(/[^/]*$/, "");
-    return location.origin + p;
-  })();
+  const AUTH = { region: "us-east-1", poolId: "us-east-1_RwigCjM55", clientId: "1h13ehjo696shqevvuo3hf0ff3" };
+  const IDP = `https://cognito-idp.${AUTH.region}.amazonaws.com/`;
 
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
@@ -40,47 +31,62 @@
   const espera = (ms) => new Promise((r) => setTimeout(r, ms));
   const mmss = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
 
-  /* ============ PKCE ============ */
-  const b64url = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
-  const aleatorio = (n = 64) => { const a = new Uint8Array(n); crypto.getRandomValues(a); return b64url(a).slice(0, n); };
-  const sha256 = async (s) => b64url(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)));
-
-  async function login() {
-    const verifier = aleatorio(96), state = aleatorio(24);
-    sessionStorage.setItem("pkce_verifier", verifier);
-    sessionStorage.setItem("pkce_state", state);
-    const q = new URLSearchParams({
-      client_id: AUTH.clientId, response_type: "code", scope: AUTH.scope,
-      redirect_uri: REDIRECT, state, code_challenge: await sha256(verifier), code_challenge_method: "S256",
-    });
-    location.assign(`https://${AUTH.domain}/oauth2/authorize?${q}`);
+  /* ============ COGNITO POR API DIRECTA ============ */
+  // Sin pagina alojada: el formulario vive en la tarjeta de acceso y habla
+  // con cognito-idp por HTTPS. Cliente publico (sin secreto); el pool no
+  // revela si un correo existe (PreventUserExistenceErrors=ENABLED), asi que
+  // usuario inexistente y clave errada se leen igual.
+  const POLITICA = "mínimo 10 caracteres, con mayúscula, minúscula y número";
+  function traducir(tipo, texto = "") {
+    switch (tipo) {
+      case "NotAuthorizedException":
+        if (/temporary password has expired/i.test(texto)) return "La contraseña temporal venció. Pide una nueva al administrador.";
+        if (/session is expired|invalid session/i.test(texto)) return "La sesión venció. Vuelve a entrar.";
+        return "Correo o contraseña incorrectos.";
+      case "UserNotFoundException": return "Correo o contraseña incorrectos.";
+      case "PasswordResetRequiredException": return "Debes restablecer tu contraseña: usa «¿Olvidaste tu contraseña?».";
+      case "UserNotConfirmedException": return "La cuenta aún no está confirmada.";
+      case "InvalidPasswordException": return `La contraseña no cumple la política: ${POLITICA}.`;
+      case "InvalidParameterException": return /verified|registered/i.test(texto) ? "Ese correo no tiene un medio de recuperación verificado. Pide ayuda al administrador." : "Revisa los datos ingresados.";
+      case "CodeMismatchException": return "El código no coincide.";
+      case "ExpiredCodeException": return "El código venció. Pide uno nuevo.";
+      case "LimitExceededException": case "TooManyRequestsException": case "TooManyFailedAttemptsException": return "Demasiados intentos. Espera unos minutos.";
+      default: return texto || "Cognito no respondió como se esperaba.";
+    }
+  }
+  async function cognito(accion, cuerpo) {
+    let r;
+    try {
+      r = await fetch(IDP, { method: "POST", headers: { "Content-Type": "application/x-amz-json-1.1", "X-Amz-Target": `AWSCognitoIdentityProviderService.${accion}` }, body: JSON.stringify(cuerpo) });
+    } catch { throw new Error("Sin conexión con Cognito. Revisa tu red."); }
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) { const tipo = String(d.__type || "").split("#").pop(); const e = new Error(traducir(tipo, d.message)); e.tipo = tipo; throw e; }
+    return d;
   }
 
-  async function canjear(code, state) {
-    if (state !== sessionStorage.getItem("pkce_state")) throw new Error("El estado de la sesión no coincide. Vuelve a entrar.");
-    const body = new URLSearchParams({
-      grant_type: "authorization_code", client_id: AUTH.clientId, code,
-      redirect_uri: REDIRECT, code_verifier: sessionStorage.getItem("pkce_verifier") || "",
-    });
-    const r = await fetch(`https://${AUTH.domain}/oauth2/token`, { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body });
-    if (!r.ok) throw new Error(`Cognito rechazó el canje (${r.status}).`);
-    const t = await r.json();
-    sessionStorage.setItem("sesion", JSON.stringify({ id: t.id_token, exp: Date.now() + (t.expires_in || 3600) * 1000 }));
-    sessionStorage.removeItem("pkce_verifier"); sessionStorage.removeItem("pkce_state");
+  /* La sesion vive en sessionStorage (muere con la pestana). Los tokens de id
+     y acceso duran 1 h; el de refresco, 30 dias, y renueva en silencio. */
+  const claimsDe = (jwt) => JSON.parse(atob(jwt.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")));
+  function guardarSesion(t) {
+    const previa = JSON.parse(sessionStorage.getItem("sesion") || "{}");
+    sessionStorage.setItem("sesion", JSON.stringify({ id: t.IdToken, access: t.AccessToken, refresh: t.RefreshToken || previa.refresh || null, exp: Date.now() + (t.ExpiresIn || 3600) * 1000 }));
   }
-
-  function sesion() {
+  async function sesion() {
     try {
       const s = JSON.parse(sessionStorage.getItem("sesion") || "null");
-      if (!s || Date.now() > s.exp) return null;
-      return JSON.parse(atob(s.id.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")));
-    } catch { return null; }
+      if (!s) return null;
+      if (Date.now() < s.exp - 60000) return claimsDe(s.id);
+      if (!s.refresh) throw new Error("sesión vencida");
+      const r = await cognito("InitiateAuth", { ClientId: AUTH.clientId, AuthFlow: "REFRESH_TOKEN_AUTH", AuthParameters: { REFRESH_TOKEN: s.refresh } });
+      guardarSesion(r.AuthenticationResult);
+      return claimsDe(r.AuthenticationResult.IdToken);
+    } catch { sessionStorage.removeItem("sesion"); return null; }
   }
-
-  function logout() {
+  async function logout() {
+    try { const s = JSON.parse(sessionStorage.getItem("sesion") || "null"); if (s && s.access) await cognito("GlobalSignOut", { AccessToken: s.access }); }
+    catch { /* la sesion local se borra igual */ }
     sessionStorage.removeItem("sesion");
-    const q = new URLSearchParams({ client_id: AUTH.clientId, logout_uri: REDIRECT });
-    location.assign(`https://${AUTH.domain}/logout?${q}`);
+    location.replace(location.pathname);
   }
 
   /* play() falla en silencio sin datos, y el navegador pausa el video mudo al
@@ -115,24 +121,69 @@
     catch { pon("motor", "ERR", "err", "escenarios no disponibles"); }
   }
 
+  /* Los cuatro pasos viven en la misma tarjeta: entrar, definir contrasena
+     (primer ingreso con clave temporal), pedir codigo y cambiar contrasena. */
+  function pantallaAcceso() {
+    const err = $("#gate-err"), msg = $("#gate-msg");
+    const formas = { entrar: $("#form-entrar"), nueva: $("#form-nueva"), olvido: $("#form-olvido"), codigo: $("#form-codigo") };
+    const muestra = (k) => { Object.entries(formas).forEach(([n, f]) => { f.hidden = n !== k; }); err.hidden = true; msg.hidden = true; const i = formas[k].querySelector("input"); if (i) i.focus(); };
+    const falla = (e) => { err.textContent = e.message; err.hidden = false; };
+    let desafio = null;       // { Session, usuario } mientras Cognito espera la contrasena nueva
+    let correoPendiente = ""; // correo al que se envio el codigo de recuperacion
+
+    $$(".peek").forEach((b) => b.addEventListener("click", () => {
+      const i = $(`#${b.dataset.peek}`), ver = i.type === "password";
+      i.type = ver ? "text" : "password"; b.classList.toggle("is-on", ver); b.textContent = ver ? "ocultar" : "ver";
+    }));
+    $$("[data-volver]").forEach((b) => b.addEventListener("click", () => muestra("entrar")));
+    $("#lnk-olvido").addEventListener("click", () => { $("#in-olvido-email").value = $("#in-email").value.trim(); muestra("olvido"); });
+
+    const alEnviar = (form, fn) => form.addEventListener("submit", async (ev) => {
+      ev.preventDefault(); err.hidden = true; msg.hidden = true;
+      const btn = form.querySelector('button[type="submit"]'); btn.classList.add("is-busy"); btn.disabled = true;
+      try { await fn(); } catch (e) { falla(e); } finally { btn.classList.remove("is-busy"); btn.disabled = false; }
+    });
+    const entrar = (t) => { guardarSesion(t); location.replace(location.pathname); };
+
+    alEnviar(formas.entrar, async () => {
+      const usuario = $("#in-email").value.trim().toLowerCase(), clave = $("#in-pass").value;
+      if (!usuario || !clave) throw new Error("Escribe tu correo y tu contraseña.");
+      const r = await cognito("InitiateAuth", { ClientId: AUTH.clientId, AuthFlow: "USER_PASSWORD_AUTH", AuthParameters: { USERNAME: usuario, PASSWORD: clave } });
+      if (r.ChallengeName === "NEW_PASSWORD_REQUIRED") { desafio = { Session: r.Session, usuario }; muestra("nueva"); return; }
+      if (r.ChallengeName) throw new Error(`Cognito pide un paso que esta pantalla no cubre (${r.ChallengeName}).`);
+      entrar(r.AuthenticationResult);
+    });
+    alEnviar(formas.nueva, async () => {
+      const a = $("#in-nueva").value, b = $("#in-nueva2").value;
+      if (a !== b) throw new Error("Las contraseñas no coinciden.");
+      if (!desafio) throw new Error("La sesión de primer ingreso venció. Vuelve a entrar.");
+      const r = await cognito("RespondToAuthChallenge", { ClientId: AUTH.clientId, ChallengeName: "NEW_PASSWORD_REQUIRED", Session: desafio.Session, ChallengeResponses: { USERNAME: desafio.usuario, NEW_PASSWORD: a } })
+        .catch((e) => { if (e.tipo === "NotAuthorizedException") { desafio = null; throw new Error("La sesión de primer ingreso venció. Vuelve a entrar."); } throw e; });
+      entrar(r.AuthenticationResult);
+    });
+    alEnviar(formas.olvido, async () => {
+      const usuario = $("#in-olvido-email").value.trim().toLowerCase();
+      if (!usuario) throw new Error("Escribe tu correo.");
+      const r = await cognito("ForgotPassword", { ClientId: AUTH.clientId, Username: usuario });
+      correoPendiente = usuario;
+      $("#codigo-para").textContent = `Código enviado a ${(r.CodeDeliveryDetails && r.CodeDeliveryDetails.Destination) || usuario}`;
+      muestra("codigo");
+    });
+    alEnviar(formas.codigo, async () => {
+      await cognito("ConfirmForgotPassword", { ClientId: AUTH.clientId, Username: correoPendiente, ConfirmationCode: $("#in-codigo").value.trim(), Password: $("#in-codigo-pass").value });
+      $("#in-email").value = correoPendiente; $("#in-pass").value = "";
+      muestra("entrar"); msg.textContent = "Contraseña actualizada. Entra con la nueva."; msg.hidden = false;
+    });
+  }
+
   /* ============ ARRANQUE ============ */
   async function arrancar() {
-    const gate = $("#gate"), app = $("#app"), err = $("#gate-err");
-    $("#gate-foot").textContent = `redirect_uri · ${REDIRECT}`;
-    $("#btn-login").addEventListener("click", () => login().catch((e) => { err.textContent = e.message; err.hidden = false; }));
+    const gate = $("#gate"), app = $("#app");
+    $("#gate-foot").textContent = `IDP · cognito-idp.${AUTH.region} · ${AUTH.poolId} · cliente público, sin secreto`;
     $("#btn-logout").addEventListener("click", logout);
 
-    const u = new URL(location.href);
-    if (u.searchParams.get("code")) {
-      try { await canjear(u.searchParams.get("code"), u.searchParams.get("state")); history.replaceState({}, "", REDIRECT); }
-      catch (e) { history.replaceState({}, "", REDIRECT); err.textContent = e.message; err.hidden = false; }
-    } else if (u.searchParams.get("error")) {
-      err.textContent = u.searchParams.get("error_description") || u.searchParams.get("error"); err.hidden = false;
-      history.replaceState({}, "", REDIRECT);
-    }
-
-    const claims = sesion();
-    if (!claims) { gate.hidden = false; app.hidden = true; reproducir($("#gate-video")); comprobaciones(); return; }
+    const claims = await sesion();
+    if (!claims) { gate.hidden = false; app.hidden = true; reproducir($("#gate-video")); pantallaAcceso(); comprobaciones(); return; }
     gate.hidden = true; app.hidden = false;
     $("#rail-user").textContent = claims.email || claims["cognito:username"] || "sesión activa";
     iniciarApp();
@@ -418,18 +469,18 @@
   // Clips FPV libres (Pexels): el POV del vuelo. Despegue y aterrizaje se
   // construyen con tratamiento de camara sobre el mismo POV.
   const POV = {
-    bosque: "https://videos.pexels.com/video-files/38466494/16335780_2560_1440_60fps.mp4",   // despegue, retorno, aterrizaje
-    vuelo: "https://videos.pexels.com/video-files/35837649/15196317_2560_1440_50fps.mp4",    // crucero (Sintra, elegido por Hugo)
+    bosque: "https://videos.pexels.com/video-files/38466494/16335777_1280_720_60fps.mp4",   // despegue, retorno, aterrizaje
+    vuelo: "https://videos.pexels.com/video-files/35837649/15196315_1280_720_50fps.mp4",    // crucero (Sintra, elegido por Hugo)
   };
   const DRONES = [
     { id: "sentinel", nombre: "Narsil Sentinel", tipo: "Quadcopter de vigilancia y percepción",
-      video: "https://videos.pexels.com/video-files/34709265/14711662_2560_1440_30fps.mp4",
+      video: "https://videos.pexels.com/video-files/34709265/14711660_1280_720_30fps.mp4",
       autonomia: [15, 20], vel: [30, 50], carga: [0.3, 0.6], lidar: { modelo: "Garmin LiDAR-Lite v4", alcance: 10 },
       specs: { Sensores: "RGB 12 MP · LiDAR · GPS M10", Navegación: "ArduPilot · MAVLink", Estructura: "F450 · 450 mm · 4 × 920 KV", Batería: "LiPo 5000 mAh", Cómputo: "Raspberry Pi 5 · 4 GB", Presupuesto: "S/ 2.500" },
       usos: ["Perímetros", "Seguridad municipal", "Obras", "Infraestructura", "Rescate cercano", "Tráfico"],
       estado: { bat: 96, gps: 14, link: 88, horas: 12.4 }, vtol: false },
     { id: "ranger", nombre: "Narsil Ranger VTOL", tipo: "Tiltrotor de vigilancia y cobertura extendida",
-      video: "https://videos.pexels.com/video-files/7132177/7132177-uhd_2560_1440_24fps.mp4",
+      video: "https://videos.pexels.com/video-files/7132177/7132177-hd_1280_720_24fps.mp4",
       autonomia: [45, 60], vel: [60, 85], carga: [0.5, 1.0], lidar: { modelo: "Garmin LiDAR-Lite v3", alcance: 40 },
       specs: { Sensores: "RGB 12 MP · LiDAR · GPS M10", Navegación: "ArduPilot · MAVLink", Estructura: "Envergadura 1,8–2,0 m · 4 rotores basculantes", Batería: "LiPo 6S", Cómputo: "Raspberry Pi 5", Presupuesto: "S/ 3.500" },
       usos: ["Fronteras", "Patrullaje rural", "Corredores", "Infraestructura crítica", "Ambiental", "Búsqueda y rescate"],

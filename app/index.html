@@ -22,13 +22,46 @@
   <div class="gate__card">
     <p class="wordmark"><span>NARSIL</span><small>PROTOCOL</small></p>
     <h1 class="gate__title">Centro de <em>mando</em></h1>
-    <p class="gate__lede">Acceso restringido. La sesión se valida con Amazon Cognito; ninguna contraseña pasa por este sitio.</p>
+    <p class="gate__lede">Acceso restringido. La identidad se valida contra Amazon Cognito: la contraseña viaja cifrada directo al proveedor y este sitio no la guarda.</p>
     <ul class="gate__checks" id="gate-checks">
       <li data-check="enlace"><span>ENLACE · sitio</span><i>—</i><b class="badge">…</b></li>
       <li data-check="cognito"><span>IDENTIDAD · Cognito us-east-1</span><i>—</i><b class="badge">…</b></li>
       <li data-check="motor"><span>MOTOR · escenarios</span><i>—</i><b class="badge">…</b></li>
     </ul>
-    <button class="btn btn--primary btn--wide" id="btn-login" type="button">Entrar</button>
+
+    <form class="gate__form" id="form-entrar" novalidate>
+      <label class="field field--text"><span>Correo</span><input type="email" id="in-email" autocomplete="username" autocapitalize="off" spellcheck="false" placeholder="nombre@empresa.com" required></label>
+      <label class="field field--text"><span>Contraseña <button class="peek" type="button" data-peek="in-pass">ver</button></span><input type="password" id="in-pass" autocomplete="current-password" required></label>
+      <button class="btn btn--primary btn--wide" id="btn-login" type="submit"><span>Entrar</span></button>
+      <button class="gate__link" id="lnk-olvido" type="button">¿Olvidaste tu contraseña?</button>
+    </form>
+
+    <form class="gate__form" id="form-nueva" hidden novalidate>
+      <p class="gate__paso mono">Primer ingreso · define tu contraseña</p>
+      <label class="field field--text"><span>Nueva contraseña <button class="peek" type="button" data-peek="in-nueva">ver</button></span><input type="password" id="in-nueva" autocomplete="new-password" required></label>
+      <label class="field field--text"><span>Repetir contraseña</span><input type="password" id="in-nueva2" autocomplete="new-password" required></label>
+      <p class="gate__hint mono">Mínimo 10 caracteres, con mayúscula, minúscula y número.</p>
+      <button class="btn btn--primary btn--wide" type="submit"><span>Guardar y entrar</span></button>
+      <button class="gate__link" type="button" data-volver>Volver</button>
+    </form>
+
+    <form class="gate__form" id="form-olvido" hidden novalidate>
+      <p class="gate__paso mono">Recuperar acceso</p>
+      <label class="field field--text"><span>Correo</span><input type="email" id="in-olvido-email" autocomplete="username" autocapitalize="off" spellcheck="false" required></label>
+      <button class="btn btn--primary btn--wide" type="submit"><span>Enviar código</span></button>
+      <button class="gate__link" type="button" data-volver>Volver</button>
+    </form>
+
+    <form class="gate__form" id="form-codigo" hidden novalidate>
+      <p class="gate__paso mono" id="codigo-para">Código enviado</p>
+      <label class="field field--text"><span>Código</span><input type="text" id="in-codigo" inputmode="numeric" autocomplete="one-time-code" required></label>
+      <label class="field field--text"><span>Nueva contraseña <button class="peek" type="button" data-peek="in-codigo-pass">ver</button></span><input type="password" id="in-codigo-pass" autocomplete="new-password" required></label>
+      <p class="gate__hint mono">Mínimo 10 caracteres, con mayúscula, minúscula y número.</p>
+      <button class="btn btn--primary btn--wide" type="submit"><span>Cambiar contraseña</span></button>
+      <button class="gate__link" type="button" data-volver>Volver</button>
+    </form>
+
+    <p class="gate__msg" id="gate-msg" hidden></p>
     <p class="gate__err" id="gate-err" hidden></p>
     <p class="gate__foot mono" id="gate-foot"></p>
   </div>
