@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Narsil Protocol — Inteligencia visual soberana</title>
+<meta name="description" content="Convertimos las cámaras que ya tienes en inteligencia visual: eventos relevantes, métricas y contexto para tu operación.">
+<meta property="og:title" content="Narsil Protocol — Inteligencia visual soberana. Del sensor a la decisión.">
+<meta property="og:description" content="Convertimos las cámaras que ya operan en eventos, métricas y contexto para decidir. Procesado en el sitio. Construido en Latinoamérica.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#08111F">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script>(function(){try{var s=localStorage.getItem("narsil-lang");var nl=(navigator.languages&&navigator.languages[0])||navigator.language||"es";var l=s||(/^es(-|$)/i.test(nl)?"es":"en");if(l==="en"){document.documentElement.classList.add("i18n-pending");setTimeout(function(){document.documentElement.classList.remove("i18n-pending")},1500)}}catch(e){}})();</script>
+</head>
+<body>
+
+<svg style="display:none" aria-hidden="true">
+  <symbol id="mark" viewBox="348 192 558 578"><path fill-rule="evenodd" clip-rule="evenodd" d="M 725 398 L 724 398 L 724 402 L 725 403 L 725 412 L 726 413 L 726 421 L 727 422 L 727 429 L 728 430 L 729 443 L 730 444 L 730 449 L 731 450 L 731 456 L 732 457 L 732 462 L 733 463 L 733 467 L 734 468 L 734 473 L 735 474 L 735 478 L 736 479 L 736 483 L 737 484 L 737 488 L 738 489 L 741 504 L 772 536 L 772 537 L 796 561 L 797 561 L 826 589 L 818 598 L 818 599 L 797 621 L 796 621 L 780 636 L 779 636 L 771 643 L 764 647 L 761 650 L 758 651 L 748 658 L 730 667 L 728 667 L 723 670 L 718 671 L 715 673 L 713 673 L 703 677 L 696 678 L 694 680 L 692 684 L 692 686 L 688 693 L 688 695 L 674 723 L 674 725 L 657 759 L 660 759 L 664 757 L 667 757 L 668 756 L 685 751 L 688 749 L 690 749 L 693 747 L 695 747 L 703 743 L 705 743 L 710 740 L 712 740 L 740 726 L 742 724 L 752 719 L 757 715 L 760 714 L 769 708 L 772 705 L 779 701 L 791 692 L 796 687 L 797 687 L 814 672 L 815 672 L 849 639 L 849 638 L 863 623 L 863 622 L 875 608 L 895 580 L 893 577 L 869 560 L 849 543 L 848 543 L 842 537 L 841 537 L 794 491 L 794 490 L 776 470 L 776 469 L 755 443 Z  M 529 397 L 521 408 L 520 411 L 504 435 L 498 442 L 496 446 L 487 458 L 469 479 L 469 480 L 450 500 L 450 501 L 430 521 L 429 521 L 409 540 L 408 540 L 403 545 L 402 545 L 383 561 L 362 576 L 359 580 L 361 584 L 364 587 L 366 591 L 369 594 L 371 598 L 380 610 L 394 626 L 394 627 L 402 635 L 402 636 L 434 668 L 435 668 L 444 677 L 445 677 L 464 693 L 489 711 L 492 712 L 497 716 L 500 717 L 512 725 L 523 730 L 525 732 L 535 737 L 537 737 L 544 741 L 546 741 L 551 744 L 553 744 L 558 747 L 563 748 L 566 750 L 568 750 L 590 758 L 596 759 L 586 739 L 586 737 L 577 720 L 577 718 L 570 705 L 570 703 L 564 692 L 564 690 L 560 683 L 559 679 L 554 678 L 550 676 L 547 676 L 546 675 L 538 673 L 535 671 L 530 670 L 525 667 L 523 667 L 511 661 L 509 659 L 504 657 L 502 655 L 497 653 L 472 635 L 466 629 L 465 629 L 438 602 L 438 601 L 427 589 L 449 568 L 450 568 L 491 527 L 491 526 L 512 504 L 514 494 L 515 493 L 515 489 L 516 488 L 518 474 L 519 473 L 519 468 L 520 467 L 520 463 L 521 462 L 521 457 L 522 456 L 522 450 L 523 449 L 523 444 L 524 443 L 524 438 L 525 437 L 525 431 L 526 430 L 526 421 L 527 420 L 528 401 L 529 400 Z  M 640 203 L 640 208 L 639 209 L 639 218 L 640 219 L 640 227 L 639 228 L 639 232 L 640 233 L 640 275 L 639 276 L 639 280 L 640 281 L 640 302 L 639 303 L 639 312 L 640 313 L 640 357 L 639 358 L 639 377 L 640 378 L 640 397 L 639 398 L 639 410 L 640 411 L 640 499 L 639 500 L 639 506 L 640 507 L 640 526 L 639 527 L 639 537 L 640 538 L 640 578 L 639 579 L 639 585 L 640 586 L 640 598 L 639 599 L 639 603 L 640 604 L 640 606 L 639 607 L 639 624 L 640 625 L 640 657 L 639 658 L 639 667 L 640 668 L 640 688 L 639 689 L 640 689 L 647 676 L 659 658 L 675 641 L 686 633 L 700 626 L 702 626 L 709 623 L 716 622 L 717 621 L 725 620 L 725 616 L 723 611 L 722 602 L 721 601 L 720 593 L 719 592 L 719 589 L 717 584 L 717 580 L 715 575 L 715 571 L 714 570 L 714 566 L 713 565 L 713 561 L 712 560 L 712 555 L 711 554 L 711 550 L 710 549 L 709 537 L 708 536 L 708 531 L 707 530 L 707 523 L 706 522 L 706 515 L 705 514 L 704 496 L 703 495 L 703 486 L 702 485 L 701 463 L 700 462 L 700 448 L 699 447 L 699 431 L 698 430 L 698 406 L 697 405 L 697 372 L 696 371 L 696 312 L 684 289 L 684 287 L 682 285 L 682 283 L 662 243 L 660 241 L 653 226 L 651 224 L 647 215 L 645 213 Z  M 614 203 L 609 210 L 599 230 L 597 232 L 557 313 L 557 386 L 556 387 L 555 435 L 554 436 L 554 452 L 553 453 L 553 466 L 552 467 L 551 488 L 550 489 L 549 507 L 548 508 L 548 515 L 547 516 L 547 523 L 546 524 L 545 537 L 544 538 L 544 543 L 543 544 L 543 550 L 542 551 L 542 555 L 541 556 L 541 560 L 540 561 L 540 565 L 539 566 L 539 570 L 538 571 L 536 585 L 535 586 L 535 589 L 533 594 L 533 598 L 532 599 L 532 602 L 530 607 L 530 611 L 528 616 L 528 620 L 544 623 L 545 624 L 553 626 L 556 628 L 558 628 L 564 631 L 577 640 L 591 654 L 607 677 L 608 680 L 614 689 Z"/></symbol>
+  <symbol id="lockup" viewBox="0 0 1410 267">
+    <g transform="scale(0.47942) translate(-359.000 -203.000)"><path fill-rule="evenodd" clip-rule="evenodd" d="M 725 398 L 724 398 L 724 402 L 725 403 L 725 412 L 726 413 L 726 421 L 727 422 L 727 429 L 728 430 L 729 443 L 730 444 L 730 449 L 731 450 L 731 456 L 732 457 L 732 462 L 733 463 L 733 467 L 734 468 L 734 473 L 735 474 L 735 478 L 736 479 L 736 483 L 737 484 L 737 488 L 738 489 L 741 504 L 772 536 L 772 537 L 796 561 L 797 561 L 826 589 L 818 598 L 818 599 L 797 621 L 796 621 L 780 636 L 779 636 L 771 643 L 764 647 L 761 650 L 758 651 L 748 658 L 730 667 L 728 667 L 723 670 L 718 671 L 715 673 L 713 673 L 703 677 L 696 678 L 694 680 L 692 684 L 692 686 L 688 693 L 688 695 L 674 723 L 674 725 L 657 759 L 660 759 L 664 757 L 667 757 L 668 756 L 685 751 L 688 749 L 690 749 L 693 747 L 695 747 L 703 743 L 705 743 L 710 740 L 712 740 L 740 726 L 742 724 L 752 719 L 757 715 L 760 714 L 769 708 L 772 705 L 779 701 L 791 692 L 796 687 L 797 687 L 814 672 L 815 672 L 849 639 L 849 638 L 863 623 L 863 622 L 875 608 L 895 580 L 893 577 L 869 560 L 849 543 L 848 543 L 842 537 L 841 537 L 794 491 L 794 490 L 776 470 L 776 469 L 755 443 Z  M 529 397 L 521 408 L 520 411 L 504 435 L 498 442 L 496 446 L 487 458 L 469 479 L 469 480 L 450 500 L 450 501 L 430 521 L 429 521 L 409 540 L 408 540 L 403 545 L 402 545 L 383 561 L 362 576 L 359 580 L 361 584 L 364 587 L 366 591 L 369 594 L 371 598 L 380 610 L 394 626 L 394 627 L 402 635 L 402 636 L 434 668 L 435 668 L 444 677 L 445 677 L 464 693 L 489 711 L 492 712 L 497 716 L 500 717 L 512 725 L 523 730 L 525 732 L 535 737 L 537 737 L 544 741 L 546 741 L 551 744 L 553 744 L 558 747 L 563 748 L 566 750 L 568 750 L 590 758 L 596 759 L 586 739 L 586 737 L 577 720 L 577 718 L 570 705 L 570 703 L 564 692 L 564 690 L 560 683 L 559 679 L 554 678 L 550 676 L 547 676 L 546 675 L 538 673 L 535 671 L 530 670 L 525 667 L 523 667 L 511 661 L 509 659 L 504 657 L 502 655 L 497 653 L 472 635 L 466 629 L 465 629 L 438 602 L 438 601 L 427 589 L 449 568 L 450 568 L 491 527 L 491 526 L 512 504 L 514 494 L 515 493 L 515 489 L 516 488 L 518 474 L 519 473 L 519 468 L 520 467 L 520 463 L 521 462 L 521 457 L 522 456 L 522 450 L 523 449 L 523 444 L 524 443 L 524 438 L 525 437 L 525 431 L 526 430 L 526 421 L 527 420 L 528 401 L 529 400 Z  M 640 203 L 640 208 L 639 209 L 639 218 L 640 219 L 640 227 L 639 228 L 639 232 L 640 233 L 640 275 L 639 276 L 639 280 L 640 281 L 640 302 L 639 303 L 639 312 L 640 313 L 640 357 L 639 358 L 639 377 L 640 378 L 640 397 L 639 398 L 639 410 L 640 411 L 640 499 L 639 500 L 639 506 L 640 507 L 640 526 L 639 527 L 639 537 L 640 538 L 640 578 L 639 579 L 639 585 L 640 586 L 640 598 L 639 599 L 639 603 L 640 604 L 640 606 L 639 607 L 639 624 L 640 625 L 640 657 L 639 658 L 639 667 L 640 668 L 640 688 L 639 689 L 640 689 L 647 676 L 659 658 L 675 641 L 686 633 L 700 626 L 702 626 L 709 623 L 716 622 L 717 621 L 725 620 L 725 616 L 723 611 L 722 602 L 721 601 L 720 593 L 719 592 L 719 589 L 717 584 L 717 580 L 715 575 L 715 571 L 714 570 L 714 566 L 713 565 L 713 561 L 712 560 L 712 555 L 711 554 L 711 550 L 710 549 L 709 537 L 708 536 L 708 531 L 707 530 L 707 523 L 706 522 L 706 515 L 705 514 L 704 496 L 703 495 L 703 486 L 702 485 L 701 463 L 700 462 L 700 448 L 699 447 L 699 431 L 698 430 L 698 406 L 697 405 L 697 372 L 696 371 L 696 312 L 684 289 L 684 287 L 682 285 L 682 283 L 662 243 L 660 241 L 653 226 L 651 224 L 647 215 L 645 213 Z  M 614 203 L 609 210 L 599 230 L 597 232 L 557 313 L 557 386 L 556 387 L 555 435 L 554 436 L 554 452 L 553 453 L 553 466 L 552 467 L 551 488 L 550 489 L 549 507 L 548 508 L 548 515 L 547 516 L 547 523 L 546 524 L 545 537 L 544 538 L 544 543 L 543 544 L 543 550 L 542 551 L 542 555 L 541 556 L 541 560 L 540 561 L 540 565 L 539 566 L 539 570 L 538 571 L 536 585 L 535 586 L 535 589 L 533 594 L 533 598 L 532 599 L 532 602 L 530 607 L 530 611 L 528 616 L 528 620 L 544 623 L 545 624 L 553 626 L 556 628 L 558 628 L 564 631 L 577 640 L 591 654 L 607 677 L 608 680 L 614 689 Z"/></g>
+<g transform="translate(241.277 -798.720)"><path fill-rule="evenodd" clip-rule="evenodd" d="M 1007 813 L 1007 929 L 1008 930 L 1008 933 L 1009 934 L 1009 937 L 1011 940 L 1011 942 L 1015 948 L 1021 954 L 1032 960 L 1041 961 L 1042 962 L 1165 962 L 1166 961 L 1167 962 L 1169 961 L 1169 933 L 1168 932 L 1048 932 L 1046 931 L 1042 927 L 1042 925 L 1041 924 L 1041 813 Z  M 942 813 L 942 961 L 943 962 L 976 962 L 977 960 L 977 814 L 976 813 Z  M 747 828 L 742 837 L 742 840 L 741 841 L 741 874 L 745 884 L 755 895 L 758 896 L 760 898 L 762 898 L 769 901 L 774 901 L 775 902 L 872 902 L 874 903 L 878 908 L 878 926 L 871 932 L 742 932 L 741 933 L 741 961 L 742 962 L 875 962 L 876 961 L 882 961 L 883 960 L 889 959 L 895 956 L 905 947 L 910 938 L 911 932 L 912 931 L 912 902 L 906 888 L 895 878 L 885 874 L 882 874 L 881 873 L 783 873 L 782 872 L 780 872 L 775 866 L 775 849 L 780 843 L 782 843 L 783 842 L 903 842 L 903 813 L 773 813 L 772 814 L 765 815 L 757 819 Z  M 543 813 L 543 842 L 673 842 L 677 844 L 681 849 L 681 871 L 676 876 L 674 876 L 673 877 L 560 877 L 559 878 L 556 878 L 549 882 L 544 888 L 544 890 L 543 891 L 543 921 L 542 922 L 542 936 L 543 937 L 543 959 L 542 960 L 543 962 L 576 962 L 577 961 L 577 908 L 578 907 L 615 907 L 669 962 L 711 962 L 712 961 L 713 962 L 713 960 L 659 908 L 660 907 L 678 907 L 679 906 L 684 906 L 685 905 L 691 904 L 701 898 L 708 891 L 713 882 L 714 875 L 715 874 L 715 844 L 714 843 L 713 837 L 710 831 L 701 821 L 690 815 L 683 814 L 682 813 Z  M 307 960 L 307 962 L 342 962 L 345 959 L 410 860 L 418 850 L 423 856 L 424 859 L 430 867 L 431 870 L 435 875 L 441 886 L 449 897 L 455 908 L 463 919 L 464 922 L 480 946 L 481 949 L 487 957 L 488 960 L 490 962 L 527 962 L 527 960 L 505 927 L 504 924 L 488 900 L 484 892 L 480 887 L 479 884 L 475 879 L 469 868 L 461 857 L 460 854 L 456 849 L 455 846 L 451 841 L 450 838 L 446 833 L 445 830 L 441 825 L 440 822 L 434 813 L 402 813 L 401 816 L 391 830 L 390 833 L 362 875 L 361 878 L 353 889 L 352 892 L 344 903 L 343 906 Z  M 85 813 L 85 962 L 118 962 L 119 961 L 119 853 L 120 852 L 132 863 L 139 868 L 146 875 L 147 875 L 152 880 L 159 885 L 166 892 L 178 901 L 192 914 L 193 914 L 198 919 L 199 919 L 250 962 L 290 962 L 291 961 L 291 813 L 258 813 L 257 814 L 257 922 L 256 923 L 125 813 Z M 972 1014 L 972 1051 L 1014 1051 L 1014 1047 L 1013 1046 L 978 1046 L 977 1045 L 977 1014 L 976 1013 L 973 1013 Z  M 871 1014 L 868 1018 L 868 1047 L 873 1051 L 899 1051 L 901 1050 L 904 1047 L 904 1017 L 901 1014 L 898 1014 L 897 1013 L 874 1013 L 873 1014 Z  M 872 1020 L 874 1018 L 898 1018 L 900 1020 L 899 1021 L 899 1026 L 900 1027 L 900 1044 L 898 1046 L 874 1046 L 872 1042 L 873 1041 L 873 1034 L 872 1033 Z  M 761 1018 L 761 1046 L 764 1050 L 766 1051 L 800 1051 L 801 1050 L 801 1047 L 800 1046 L 767 1046 L 766 1045 L 766 1020 L 768 1018 L 800 1018 L 801 1017 L 801 1014 L 800 1013 L 767 1013 L 766 1014 L 764 1014 Z  M 660 1014 L 657 1017 L 657 1019 L 656 1020 L 656 1044 L 658 1049 L 662 1051 L 688 1051 L 690 1050 L 693 1047 L 693 1018 L 690 1014 L 688 1014 L 687 1013 L 663 1013 L 662 1014 Z  M 663 1018 L 687 1018 L 688 1019 L 688 1045 L 687 1046 L 662 1046 L 661 1045 L 661 1020 Z  M 554 1013 L 553 1014 L 553 1018 L 567 1018 L 569 1020 L 569 1051 L 574 1051 L 574 1019 L 575 1018 L 590 1018 L 590 1013 Z  M 451 1015 L 449 1018 L 449 1046 L 450 1048 L 454 1051 L 481 1051 L 483 1050 L 486 1046 L 486 1018 L 485 1016 L 479 1013 L 456 1013 Z  M 456 1018 L 479 1018 L 481 1020 L 481 1045 L 480 1046 L 455 1046 L 454 1045 L 454 1020 Z  M 345 1013 L 344 1014 L 344 1051 L 349 1051 L 349 1037 L 350 1036 L 351 1037 L 364 1037 L 375 1051 L 381 1051 L 381 1050 L 371 1038 L 372 1037 L 377 1036 L 381 1031 L 381 1019 L 380 1017 L 377 1014 L 375 1014 L 374 1013 Z  M 349 1019 L 350 1018 L 374 1018 L 376 1020 L 376 1030 L 374 1032 L 350 1032 L 349 1031 Z  M 239 1014 L 239 1050 L 240 1051 L 244 1051 L 244 1038 L 246 1036 L 247 1037 L 249 1036 L 273 1036 L 277 1031 L 277 1019 L 273 1014 L 271 1014 L 270 1013 L 242 1013 L 241 1014 L 240 1013 Z  M 244 1019 L 245 1018 L 270 1018 L 272 1020 L 272 1030 L 270 1032 L 245 1032 L 244 1031 Z"/></g>
+  </symbol>
+</svg>
+
+<a class="skip" href="#principal">Ir al contenido</a>
+
+<header class="nav" id="nav">
+  <div class="wrap nav__in">
+    <a class="brand" href="#inicio" aria-label="Narsil Protocol — inicio"><svg class="brand__lockup" aria-hidden="true"><use href="#lockup"/></svg></a>
+    <nav class="nav__links" aria-label="Secciones">
+      <a href="#plataforma">Plataforma</a>
+      <a href="#industrias">Industrias</a>
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#vision">Visión</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+    <div class="nav__cta">
+      <div class="lang" role="group" aria-label="Idioma">
+        <button type="button" class="lang__btn" data-lang="es" aria-pressed="true">ES</button>
+        <button type="button" class="lang__btn" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <a class="link" href="#contacto">Solicitar demo</a>
+      <button class="nav__burger" id="burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir menú"><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="menu" id="menu" hidden>
+    <nav class="wrap menu__in" aria-label="Secciones (móvil)">
+      <a href="#plataforma"><span>01</span>Plataforma</a>
+      <a href="#industrias"><span>02</span>Industrias</a>
+      <a href="#como-funciona"><span>03</span>Cómo funciona</a>
+      <a href="#vision"><span>04</span>Visión</a>
+      <a href="#contacto"><span>05</span>Contacto</a>
+      <a class="btn" href="#contacto">Solicitar demo</a>
+    </nav>
+  </div>
+</header>
+
+<main id="principal">
+
+<!-- ============ HERO ============ -->
+<section class="hero reveal" id="inicio">
+  <div class="media" aria-hidden="true">
+    <video class="hero__clip is-front" autoplay muted playsinline preload="metadata"
+      poster="https://images.pexels.com/videos/32538554/pexels-photo-32538554.jpeg?auto=compress&cs=tinysrgb&w=1600"></video>
+    <video class="hero__clip" muted playsinline preload="none"></video>
+    <div class="media__shade media__shade--center"></div>
+  </div>
+  <div class="wrap hero__in">
+    <h1 class="display display--hero">Inteligencia visual soberana.<br>Del sensor a la decisión.</h1>
+    <p class="hero__sub">Convertimos las cámaras que ya operan en eventos, métricas y contexto para decidir. Procesado en el sitio. Construido en Latinoamérica.</p>
+    <div class="hero__cta">
+      <a class="btn" href="#contacto">Solicitar demo</a>
+      <a class="link link--light" href="#plataforma">Ver la plataforma</a>
+    </div>
+  </div>
+  <div class="hero__strip" aria-label="Industrias">
+    <ul class="wrap"><li><a href="#industrias">Seguridad</a></li><li><a href="#industrias">Retail</a></li><li><a href="#industrias">Producción</a></li><li><a href="#industrias">Obras</a></li><li><a href="#industrias">Agricultura</a></li><li><a href="#industrias">Minería</a></li></ul>
+  </div>
+</section>
+
+<!-- ============ QUÉ HACEMOS ============ -->
+<section class="sec sec--paper" id="que-es">
+  <div class="wrap reveal statement-wrap">
+    <p class="statement">Convertimos las cámaras que ya tienes en inteligencia visual: <em>eventos relevantes, métricas y contexto</em> para tu operación.</p>
+    <dl class="facts">
+      <div><span class="num">01</span><dt class="label">Categoría</dt><dd>Inteligencia visual aplicada.</dd></div>
+      <div><span class="num">02</span><dt class="label">Para quién</dt><dd>Equipos de seguridad, operaciones y negocio.</dd></div>
+      <div><span class="num">03</span><dt class="label">Valor</dt><dd>Eventos y métricas para decidir con contexto.</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- ============ MANIFIESTO ============ -->
+<section class="band reveal" id="manifiesto">
+  <div class="media" aria-hidden="true">
+    <video autoplay muted loop playsinline preload="none" poster="https://images.pexels.com/videos/19909718/aerial-city-dji-drone-19909718.jpeg?auto=compress&cs=tinysrgb&w=1600" data-hd="https://videos.pexels.com/video-files/19909718/19909718-hd_1920_1080_30fps.mp4" data-sd="https://videos.pexels.com/video-files/19909718/19909718-hd_1280_720_30fps.mp4"></video>
+    <div class="media__shade media__shade--band"></div>
+  </div>
+  <div class="wrap">
+    <h2 class="display display--xl">El mundo físico<br>ya está <em>hablando.</em></h2>
+    <p class="lede lede--light" style="margin-top:28px">Cada movimiento deja una señal.<br>El valor está en entenderla.</p>
+    <div class="band__foot">
+      <p>Una entrada.<br>Una pausa.<br>Un cambio de ritmo.</p>
+      <p>Narsil Protocol transforma video en contexto para las personas que deciden.</p>
+      <p>Construimos inteligencia donde ocurre la realidad.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PLATAFORMA ============ -->
+<section class="sec sec--white" id="plataforma" style="padding-top:0">
+  <div class="stage reveal">
+    <div class="media" aria-hidden="true">
+      <video autoplay muted loop playsinline preload="none" poster="https://images.pexels.com/videos/10452360/pexels-photo-10452360.jpeg?auto=compress&cs=tinysrgb&w=1600" data-hd="https://videos.pexels.com/video-files/10452360/10452360-hd_1920_1080_30fps.mp4" data-sd="https://videos.pexels.com/video-files/10452360/10452360-hd_1280_720_30fps.mp4"></video>
+      <div class="media__shade media__shade--soft"></div>
+    </div>
+  </div>
+  <div class="wrap mediacap reveal">
+    <p>Puerto, zona 02. Una operación real vista por la plataforma: una región delimitada, un evento con lugar, tiempo y estado, y el contexto para priorizarlo.</p>
+  </div>
+  <div class="wrap reveal" style="padding-top:clamp(72px,9vw,128px)">
+    <div class="sec__head sec__head--split">
+      <div>
+        <h2 class="display">Una plataforma.<br><em>Distintas decisiones.</em></h2>
+      </div>
+      <p class="sec__lede">Un mismo motor. Cada equipo ve lo que necesita para decidir, con evidencia y contexto.</p>
+    </div>
+    <ol class="list list--demos">
+      <li class="demo is-open" data-demo>
+        <button class="demo__head" type="button" aria-expanded="true" aria-controls="demo-seguridad">
+          <h3>Seguridad</h3>
+          <p>Priorizar eventos y revisar evidencia.</p>
+          <span class="num">/01</span>
+        </button>
+        <div class="demo__body" id="demo-seguridad">
+          <div class="demo__inner">
+            <p class="demo__pie">Quinta Avenida, de noche. <strong>43 peatones identificados y 12 alertas en 24 segundos</strong>: personas cruzando fuera del paso de cebra, sobre calzada de tráfico. El sistema distingue peatón de vehículo — la misma zona está prohibida para uno y es camino normal para el otro.</p>
+            <figure class="demo__fig"><video muted loop playsinline autoplay preload="none" poster="assets/video/demo-seguridad.jpg" data-src="assets/video/demo-seguridad.mp4"></video></figure>
+          </div>
+        </div>
+      </li>
+      <li class="demo" data-demo>
+        <button class="demo__head" type="button" aria-expanded="false" aria-controls="demo-retail">
+          <h3>Retail</h3>
+          <p>Entender el tránsito y la atención al local.</p>
+          <span class="num">/02</span>
+        </button>
+        <div class="demo__body" id="demo-retail">
+          <div class="demo__inner">
+            <p class="demo__pie">Pasillo de centro comercial, grabado con nuestra propia cámara. <strong>17 personas contadas y 11 detenidas frente al local en 18 segundos</strong>. Tu punto de venta sabe quién compró; esto muestra quién pasó por delante y no entró — el que pasa de largo no deja rastro en ninguna caja registradora.</p>
+            <figure class="demo__fig"><video muted loop playsinline autoplay preload="none" poster="assets/video/demo-rosen.jpg" data-src="assets/video/demo-rosen.mp4"></video></figure>
+          </div>
+        </div>
+      </li>
+      <li class="demo" data-demo>
+        <button class="demo__head" type="button" aria-expanded="false" aria-controls="demo-operaciones">
+          <h3>Operaciones e infraestructura</h3>
+          <p>Medir actividad, ritmo y uso de zonas.</p>
+          <span class="num">/03</span>
+        </button>
+        <div class="demo__body" id="demo-operaciones">
+          <div class="demo__inner">
+            <p class="demo__pie">Línea de empaque de fruta. <strong>31 unidades contadas, alrededor de 150 por minuto</strong>, unidad por unidad en el momento en que pasan. Cero alertas, a propósito: una faja no tiene anomalías. El mismo motor, otra pregunta.</p>
+            <figure class="demo__fig"><video muted loop playsinline autoplay preload="none" poster="assets/video/demo-produccion.jpg" data-src="assets/video/demo-produccion.mp4"></video></figure>
+          </div>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ INDUSTRIAS ============ -->
+<section class="sec sec--ink" id="industrias">
+  <div class="wrap reveal">
+    <div class="sec__head sec__head--split">
+      <div>
+        <h2 class="display display--light">Un motor.<br><em>Cinco contextos.</em></h2>
+      </div>
+      <p class="sec__lede sec__lede--light">La misma plataforma se configura para cada escena: qué zonas importan, qué cuenta como evento y qué cifras se reportan.</p>
+    </div>
+    <ul class="contexts">
+      <li class="ctx"><figure class="ctx__fig"><img loading="lazy" decoding="async" width="588" height="588" src="assets/brand/ctx-seguridad-294.webp" srcset="assets/brand/ctx-seguridad-294.webp 294w, assets/brand/ctx-seguridad.webp 588w" sizes="(max-width: 640px) 44vw, (max-width: 1100px) 30vw, 18vw" alt="Portón industrial de noche con una cámara Narsil Protocol"></figure><p class="label dash">Seguridad</p><p>Intrusión, merodeo y aglomeraciones.</p></li>
+      <li class="ctx"><figure class="ctx__fig"><img loading="lazy" decoding="async" width="588" height="588" src="assets/brand/ctx-retail-294.webp" srcset="assets/brand/ctx-retail-294.webp 294w, assets/brand/ctx-retail.webp 588w" sizes="(max-width: 640px) 44vw, (max-width: 1100px) 30vw, 18vw" alt="Fachada de una tienda iluminada de noche"></figure><p class="label dash">Retail</p><p>Tránsito, detención y conversión de entrada.</p></li>
+      <li class="ctx"><figure class="ctx__fig"><img loading="lazy" decoding="async" width="588" height="588" src="assets/brand/ctx-produccion-294.webp" srcset="assets/brand/ctx-produccion-294.webp 294w, assets/brand/ctx-produccion.webp 588w" sizes="(max-width: 640px) 44vw, (max-width: 1100px) 30vw, 18vw" alt="Cajas sobre una faja transportadora"></figure><p class="label dash">Producción</p><p>Conteo de unidades y ritmo de línea.</p></li>
+      <li class="ctx"><figure class="ctx__fig"><img loading="lazy" decoding="async" width="588" height="588" src="assets/brand/ctx-obras-294.webp" srcset="assets/brand/ctx-obras-294.webp 294w, assets/brand/ctx-obras.webp 588w" sizes="(max-width: 640px) 44vw, (max-width: 1100px) 30vw, 18vw" alt="Obra en construcción iluminada de noche"></figure><p class="label dash">Obras</p><p>Actividad y presencia por zona.</p></li>
+      <li class="ctx"><figure class="ctx__fig"><img loading="lazy" decoding="async" width="588" height="588" src="assets/brand/ctx-agricultura-294.webp" srcset="assets/brand/ctx-agricultura-294.webp 294w, assets/brand/ctx-agricultura.webp 588w" sizes="(max-width: 640px) 44vw, (max-width: 1100px) 30vw, 18vw" alt="Cultivos al atardecer con un sensor en un poste"></figure><p class="label dash">Agricultura</p><p>Monitoreo visual según cultivo y sensor.</p></li>
+    </ul>
+    <p class="footnote">Cada caso requiere configuración y validación en campo.</p>
+  </div>
+</section>
+
+<!-- ============ CÓMO FUNCIONA ============ -->
+<section class="sec sec--paper" id="como-funciona">
+  <div class="wrap reveal">
+    <div class="sec__head sec__head--split">
+      <div>
+        <h2 class="display">La inteligencia<br><em>empieza</em> en el sitio.</h2>
+      </div>
+      <p class="sec__lede">El video continuo se procesa localmente. A la nube suben eventos y métricas. Fotos y clips de evidencia según la configuración del despliegue.</p>
+    </div>
+    <ol class="flow" aria-label="Del video a la decisión">
+      <li class="flow__node"><figure class="flow__fig"><img loading="lazy" decoding="async" width="670" height="504" src="assets/brand/render-camera-336.webp" srcset="assets/brand/render-camera-336.webp 335w, assets/brand/render-camera.webp 670w" sizes="(max-width: 640px) calc(100vw - 40px), (max-width: 900px) 46vw, 22vw" alt="Cámara con la marca Narsil Protocol"></figure><span class="num">01</span><p class="label">Cámaras</p><p>Video de la operación.</p></li>
+      <li class="flow__node"><figure class="flow__fig"><img loading="lazy" decoding="async" width="480" height="496" src="assets/brand/render-edge-336.webp" srcset="assets/brand/render-edge-336.webp 240w, assets/brand/render-edge.webp 480w" sizes="(max-width: 640px) calc(100vw - 40px), (max-width: 900px) 46vw, 22vw" alt="Equipo de cómputo en el borde"></figure><span class="num">02</span><p class="label">Borde</p><p>Detección y seguimiento.</p></li>
+      <li class="flow__node"><figure class="flow__fig"><img loading="lazy" decoding="async" width="688" height="472" src="assets/brand/render-frames-336.webp" srcset="assets/brand/render-frames-336.webp 344w, assets/brand/render-frames.webp 688w" sizes="(max-width: 640px) calc(100vw - 40px), (max-width: 900px) 46vw, 22vw" alt="Cuadros de video con detecciones"></figure><span class="num">03</span><p class="label">Eventos</p><p>Zonas, actividad y cifras.</p></li>
+      <li class="flow__node"><figure class="flow__fig"><img loading="lazy" decoding="async" width="744" height="456" src="assets/brand/render-laptop-336.webp" srcset="assets/brand/render-laptop-336.webp 372w, assets/brand/render-laptop.webp 744w" sizes="(max-width: 640px) calc(100vw - 40px), (max-width: 900px) 46vw, 22vw" alt="Tablero de Narsil Protocol en una laptop"></figure><span class="num">04</span><p class="label">Decisiones</p><p>Tableros, alertas y contexto.</p></li>
+    </ol>
+    <div class="split">
+      <div class="split__col"><p class="label">En el sitio</p><ul class="ticks"><li>Video continuo</li><li>Detección y seguimiento</li><li>Reglas por zona</li><li>Clips de evidencia</li></ul></div>
+      <div class="split__col split__col--ink"><p class="label">A la nube</p><ul class="ticks"><li>Eventos</li><li>Métricas</li><li>Tableros y alertas</li><li>Fotos y clips, según configuración</li></ul></div>
+    </div>
+    <div class="sheet reveal">
+      <div class="sheet__head">
+        <h3 class="display display--sm">Ficha</h3>
+        <p class="sec__lede">Lo que entra, lo que sale y dónde ocurre. Sin adjetivos.</p>
+      </div>
+      <dl class="specs">
+        <div><dt>Entrada</dt><dd>Video de cámaras existentes. Archivos y transmisiones de prueba hoy; cámaras IP por RTSP en camino.</dd></div>
+        <div><dt>Detección</dt><dd>Personas, vehículos y objetos, con identidad continua a lo largo del tiempo.</dd></div>
+        <div><dt>Reglas por zona</dt><dd>Intrusión en zona restringida, merodeo, cruce repetido y densidad de personas.</dd></div>
+        <div><dt>Salida</dt><dd>Eventos con evidencia, métricas por zona y por hora, alertas por correo, API y video en vivo.</dd></div>
+        <div><dt>Dónde corre</dt><dd>En el borde, cerca de la cámara. A la nube suben eventos y métricas, no la grabación continua.</dd></div>
+        <div><dt>Privacidad</dt><dd>Sin identificación facial. La plataforma trabaja con posiciones, trayectorias y zonas.</dd></div>
+        <div><dt>Rendimiento medido</dt><dd>54,7 fps · 5,5× tiempo real · 17,2 ms de detección y 0,66 ms de capas propias por cuadro. Clip de referencia de 795 cuadros en un MacBook M4, sin GPU dedicada.</dd></div>
+        <div><dt>Estado</dt><dd>Motor y tablero en operación de prueba. Cada despliegue se configura por escena y se valida en campo.</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CAPACIDADES ============ -->
+<section class="sec sec--white" id="capacidades">
+  <div class="wrap reveal">
+    <div class="sec__head sec__head--split">
+      <div>
+        <h2 class="display">Lo que hace hoy.<br><em>Lo que viene.</em></h2>
+      </div>
+      <p class="sec__lede">Distinguimos lo disponible de lo que está en camino. Cada capacidad se configura por escena y se valida en campo.</p>
+    </div>
+    <ul class="caps">
+      <li><span class="num">01</span><h3>Detección y seguimiento</h3><p>Personas, vehículos y objetos, con identidad continua a lo largo del tiempo.</p></li>
+      <li><span class="num">02</span><h3>Zonas y reglas</h3><p>Intrusión en zona restringida, merodeo, cruce repetido y densidad de personas.</p></li>
+      <li><span class="num">03</span><h3>Conteo</h3><p>Personas únicas por zona y embudo de entrada: pasan, se detienen, ingresan.</p></li>
+      <li><span class="num">04</span><h3>Ritmo de línea</h3><p>Unidades por minuto y pausas, comparadas con el objetivo del turno.</p></li>
+      <li><span class="num">05</span><h3>Evidencia</h3><p>Clip con segundos previos al evento y foto de referencia, por cada alerta.</p></li>
+      <li><span class="num">06</span><h3>Resumen automático</h3><p>Descripción en lenguaje claro de lo que ocurrió, para revisar sin ver el video.</p></li>
+      <li><span class="num">07</span><h3>Alertas</h3><p>Correo y tablero, con el contexto necesario para decidir.</p></li>
+      <li><span class="num">08</span><h3>API y video en vivo</h3><p>Integración con los sistemas existentes y visualización en tiempo real.</p></li>
+    </ul>
+    <div class="coming">
+      <p class="label">En camino</p>
+      <ul class="chips"><li>Cámaras IP por RTSP</li><li>Aceleración en GPU y NPU</li><li>Cámaras con cómputo integrado</li><li>Plataformas aéreas para cultivos</li><li>Sistemas autónomos</li></ul>
+    </div>
+    <p class="disclaimer">Esta página describe capacidades disponibles y otras en desarrollo. Las cifras provienen de pruebas internas sobre un clip de referencia y no garantizan el rendimiento en cada despliegue. Lo que está en camino se anuncia como tal.</p>
+  </div>
+</section>
+
+<!-- ============ VISIÓN ============ -->
+<section class="band reveal" id="vision">
+  <div class="media" aria-hidden="true">
+    <video autoplay muted loop playsinline preload="none" poster="https://images.pexels.com/videos/39306854/beautiful-lake-bolivia-cornering-curved-road-39306854.jpeg?auto=compress&cs=tinysrgb&w=1600" data-hd="https://videos.pexels.com/video-files/39306854/16725627_1920_1080_60fps.mp4" data-sd="https://videos.pexels.com/video-files/39306854/16725620_1280_720_60fps.mp4"></video>
+    <div class="media__shade media__shade--band"></div>
+  </div>
+  <div class="wrap">
+    <h2 class="display">Capacidad de ver.<br><em>Libertad para decidir.</em></h2>
+    <p class="sec__lede sec__lede--light" style="margin-top:30px">Nuestra visión es construir en Latinoamérica tecnología propia para empresas, infraestructura crítica y, a futuro, defensa y seguridad nacional.</p>
+    <ul class="pillars3" style="margin-top:72px">
+      <li><p class="label label--ice">Percepción local</p><p>Detección y seguimiento en el borde, cerca de la cámara, sin depender de la nube para lo esencial.</p></li>
+      <li><p class="label label--ice">Control de los datos</p><p>El video se queda en el sitio. A la nube suben eventos y métricas, no la grabación continua.</p></li>
+      <li><p class="label label--ice">Capacidad regional</p><p>Ingeniería, soporte y despliegue desde Latinoamérica, para operaciones de la región.</p></li>
+    </ul>
+    <p class="footnote">El alcance sin conexión depende de cada despliegue.</p>
+  </div>
+</section>
+
+<!-- ============ HORIZONTE ============ -->
+<section class="band reveal" id="horizonte">
+  <div class="media" aria-hidden="true">
+    <video autoplay muted loop playsinline preload="none" poster="https://images.pexels.com/videos/4457694/pexels-photo-4457694.jpeg?auto=compress&cs=tinysrgb&w=1600" data-hd="https://videos.pexels.com/video-files/4457694/4457694-hd_1920_1080_24fps.mp4" data-sd="https://videos.pexels.com/video-files/4457694/4457694-hd_1280_720_24fps.mp4"></video>
+    <div class="media__shade media__shade--band"></div>
+  </div>
+  <div class="wrap">
+    <h2 class="display">La inteligencia<br>también <em>despega.</em></h2>
+    <p class="sec__lede sec__lede--light" style="margin-top:30px">Nuestra visión: percepción a bordo de drones autónomos.</p>
+    <ul class="pillars3" style="margin-top:72px">
+      <li><p class="label label--ice">Inspección</p><p>Recorridos programados sobre infraestructura y cultivos.</p></li>
+      <li><p class="label label--ice">Monitoreo</p><p>Cobertura de zonas amplias donde una cámara fija no alcanza.</p></li>
+      <li><p class="label label--ice">Respuesta a eventos</p><p>Verificación visual de una alerta antes de decidir.</p></li>
+    </ul>
+    <p class="footnote">Concepto de producto · Visión futura. No representa un producto disponible.</p>
+  </div>
+</section>
+
+<!-- ============ FUNDAMENTOS ============ -->
+<section class="sec sec--paper" id="fundamentos">
+  <div class="wrap reveal">
+    <div class="sec__head">
+      <h2 class="signature"><span>Ver.</span><span><em>Entender.</em></span><span>Decidir.</span></h2>
+    </div>
+    <ul class="pillars3 pillars3--dark">
+      <li><p class="label">Propósito</p><h3>Hacer comprensible el mundo físico para mejorar las decisiones.</h3></li>
+      <li><p class="label">Misión</p><h3>Convertir video en eventos, métricas y contexto cerca de donde ocurre la operación.</h3></li>
+      <li><p class="label">Visión</p><h3>Construir capacidad tecnológica propia en Latinoamérica, desde cámaras hasta sistemas autónomos.</h3></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ PRIMER PASO ============ -->
+<section class="band reveal" id="primer-paso">
+  <div class="media" aria-hidden="true">
+    <video autoplay muted loop playsinline preload="none" poster="https://images.pexels.com/videos/35172621/2025-4k-4k-aerial-4k-drone-35172621.jpeg?auto=compress&cs=tinysrgb&w=1600" data-hd="https://videos.pexels.com/video-files/35172621/14900946_1920_1080_30fps.mp4" data-sd="https://videos.pexels.com/video-files/35172621/14900940_1280_720_30fps.mp4"></video>
+    <div class="media__shade media__shade--band"></div>
+  </div>
+  <div class="wrap">
+    <h2 class="display">Exploremos un caso de uso<br><em>en tu operación.</em></h2>
+    <p class="sec__lede sec__lede--light" style="margin-top:28px">Sin compromiso. Un caso concreto, una escena, una cifra que hoy no tienes.</p>
+  </div>
+</section>
+<div class="ctabar" aria-label="Contacto rápido">
+  <a class="ctabar__item ctabar__item--light" href="#contacto">Solicitar demo</a>
+  <a class="ctabar__item ctabar__item--dark" id="mail-cta" href="#">Escríbenos</a>
+</div>
+
+<!-- ============ CONTACTO ============ -->
+<section class="sec sec--paper" id="contacto">
+  <div class="wrap grid2 reveal">
+    <div>
+      <h2 class="display display--sm">Cuéntanos qué<br>necesitas observar.</h2>
+      <p class="sec__lede" style="margin-top:28px">Respondemos con un alcance concreto: qué se puede medir hoy y qué requiere validación en campo.</p>
+      <ul class="contact__meta">
+        <li><span class="label">Correo</span><a id="mail-link" href="#">—</a></li>
+        <li><span class="label">Sede</span>Lima, Perú</li>
+        <li><span class="label">Horario</span>Lun – Vie · 9:00 – 18:00 (GMT−5)</li>
+      </ul>
+    </div>
+    <form class="form" id="form" novalidate>
+      <div class="form__row">
+        <label class="field"><span>Nombre</span><input name="nombre" type="text" autocomplete="name" required></label>
+        <label class="field"><span>Empresa</span><input name="empresa" type="text" autocomplete="organization" required></label>
+      </div>
+      <div class="form__row">
+        <label class="field"><span>Correo</span><input name="correo" type="email" autocomplete="email" required></label>
+        <label class="field"><span>Sector</span>
+          <select name="sector" required>
+            <option value="" selected disabled>Seleccionar</option>
+            <option>Seguridad</option><option>Retail</option><option>Producción</option><option>Obras</option><option>Agricultura</option><option>Infraestructura</option><option>Otro</option>
+          </select>
+        </label>
+      </div>
+      <label class="field"><span>¿Qué necesitas observar?</span><textarea name="mensaje" rows="5" required placeholder="Por ejemplo: presencia en una zona restringida, conteo de ingresos por hora, ritmo de una línea."></textarea></label>
+      <div class="form__foot">
+        <button class="btn" type="submit">Enviar solicitud</button>
+        <p class="form__hint" id="form-hint">Se abrirá tu cliente de correo con la solicitud lista para enviar.</p>
+      </div>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer__in">
+    <div>
+      <a class="brand brand--lg" href="#inicio" aria-label="Narsil Protocol — inicio"><svg class="brand__lockup" aria-hidden="true"><use href="#lockup"/></svg></a>
+      <p class="footer__tag">Inteligencia para el mundo físico.<br>Ver. Entender. Decidir.</p>
+    </div>
+    <nav class="footer__cols" aria-label="Pie de página">
+      <div><p class="label">Producto</p><a href="#plataforma">Plataforma</a><a href="#industrias">Industrias</a><a href="#como-funciona">Cómo funciona</a><a href="#capacidades">Capacidades</a></div>
+      <div><p class="label">Empresa</p><a href="#fundamentos">Fundamentos</a><a href="#vision">Visión</a><a href="#contacto">Contacto</a></div>
+      <div><p class="label">Contacto</p><a id="mail-foot" href="#">—</a><a href="#contacto">Solicitar demo</a><span class="footer__muted">Lima, Perú</span></div>
+    </nav>
+  </div>
+  <div class="wrap footer__base">
+    <p>© <span id="year">2026</span> Narsil Protocol · Todos los derechos reservados</p>
+    <p><a href="#" aria-disabled="true">Privacidad</a> · <a href="#" aria-disabled="true">Términos</a></p>
+  </div>
+</footer>
+
+<script src="i18n.js" defer></script>
+<script src="main.js" defer></script>
+</body>
+</html>

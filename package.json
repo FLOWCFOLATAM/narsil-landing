@@ -1,0 +1,9 @@
+{
+  "name": "narsil-landing",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Landing estática de Narsil Protocol",
+  "scripts": {
+    "dev": "python3 -m http.server 4310 --bind 127.0.0.1"
+  }
+}
